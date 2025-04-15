@@ -18,6 +18,7 @@ class CbIntros extends StatefulWidget {
     required this.titles,
     required this.desc,
     required this.moveToNextScreen,
+    required this.boxHeight,
     required this.appPadding,
     required this.boxColor,
     required this.titleContainer,
@@ -32,6 +33,7 @@ class CbIntros extends StatefulWidget {
   final List<String> titles;
   final WidgetBuilder descContainer;
   final List<String> desc;
+  final double boxHeight;
   final double appPadding;
   final VoidCallback moveToNextScreen;
   final ValueChanged<int>? onPageChanged;
@@ -152,7 +154,7 @@ class _CbIntrosState extends State<CbIntros> {
                     ),
                     Center(
                       child: SizedBox(
-                        height: 300,
+                        height: widget.boxHeight,
                         child: Stack(
                           children: [
                             Padding(
@@ -171,7 +173,7 @@ class _CbIntrosState extends State<CbIntros> {
                                   child: Center(
                                     child: Column(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                          MainAxisAlignment.center,
                                       children: [
                                         widget.titleContainer(context),
                                         SizedBox(height: 2),

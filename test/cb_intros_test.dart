@@ -36,7 +36,7 @@ void main() {
               return Text("data");
           }, descContainer: (BuildContext context) {
               return Text("data");
-          },
+          }, boxHeight: 300.0,
           ),
         ),
       ),
