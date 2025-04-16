@@ -150,16 +150,16 @@ Here's a basic example of how to use `CbIntros`:
 
 
 ## Definition of Terms
-**images:** An array of images that you want to use as the info images.
-**colors:** An array of colors that will be used as the background colors.
-**title:** The title or main word of each screen.
-**desc:** The descriptions in each screens.
-**moveToNextScreen:** You put your Navigator logic here. This triggers after the last screen.
-**boxHeight:** The height of the box with the button curves.
-**appPadding:** The padding around the widgets used in the box.
-**boxColor:** A preferred color for the box.
-**titleContainer:** The widget used to display the title. 
-**descContainer:** The widget used to display the description. 
-**onPageChanged:** The method that makes sure to keep track of the current page and index.
+**images:** An array of images that you want to use as the info images.\
+**colors:** An array of colors that will be used as the background colors.\
+**title:** The title or main word of each screen.\
+**desc:** The descriptions in each screens.\
+**moveToNextScreen:** You put your Navigator logic here. This triggers after the last screen.\
+**boxHeight:** The height of the box with the button curves.\
+**appPadding:** The padding around the widgets used in the box.\
+**boxColor:** A preferred color for the box.\
+**titleContainer:** The widget used to display the title.\
+**descContainer:** The widget used to display the description.\
+**onPageChanged:** The method that makes sure to keep track of the current page and index.\
     
     
