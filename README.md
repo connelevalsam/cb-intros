@@ -20,10 +20,10 @@ A visually appealing and customizable onboarding/intro screen widget for your Fl
 
 <!-- Add screenshots or GIFs here to showcase your package visually -->
 
-![Alt on Android](assets/examples/Screenshot01.png)
-![Alt on Android](assets/examples/Screenshot02.png)
-![Alt on iOS](assets/examples/Screenshot03.png)
-![Alt on iOS](assets/examples/Screenshot03.png)
+<img src="assets/examples/Screenshot01.png" width="500" alt="On Android"> |
+<img src="assets/examples/Screenshot02.png" width="500" alt="On Android"> |
+<img src="assets/examples/Screenshot03.png" width="500" alt="On iOS"> |
+<img src="assets/examples/Screenshot04.png" width="500" alt="On iOS">
 
 ## Getting Started
 
