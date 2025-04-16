@@ -1,4 +1,4 @@
-## 0.1.2
+## 0.1.3
 
 Initial release of cb_intros.
 Implements a customizable onboarding/intro screen widget with:

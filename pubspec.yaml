@@ -1,6 +1,6 @@
 name: cb_intros
 description: "A better way to introduce users to your app. A circular bottom curve and circular button with nice transitions."
-version: 0.1.2
+version: 0.1.3
 homepage: https://github.com/connelevalsam/cb-intros
 
 environment:

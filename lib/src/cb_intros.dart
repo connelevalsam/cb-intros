@@ -24,11 +24,21 @@ class CbIntros extends StatefulWidget {
     required this.titleContainer,
     required this.descContainer,
     this.onPageChanged,
+    this.btnColor = Colors.orange,
+    this.btnIconColor = Colors.white,
+    this.btnIcon = Icons.arrow_forward_ios,
+    this.indicatorColor = Colors.grey,
+    this.indicatorActiveColor = Colors.white,
   });
 
   final List<String> images;
   final List<Color> colors;
   final Color boxColor;
+  final Color btnColor;
+  final Color btnIconColor;
+  final Color indicatorColor;
+  final Color indicatorActiveColor;
+  final IconData btnIcon;
   final WidgetBuilder titleContainer;
   final List<String> titles;
   final WidgetBuilder descContainer;
@@ -145,9 +155,9 @@ class _CbIntrosState extends State<CbIntros> {
                           radius: 4.0,
                           dotWidth: 10.0,
                           dotHeight: 8.0,
-                          dotColor: Colors.grey.shade400,
+                          dotColor: widget.indicatorColor,
                           paintStyle: PaintingStyle.fill,
-                          activeDotColor: Colors.white,
+                          activeDotColor: widget.indicatorActiveColor,
                         ), // your preferred effect
                         onDotClicked: (index) {},
                       ),
@@ -196,9 +206,9 @@ class _CbIntrosState extends State<CbIntros> {
                                 child: Container(
                                   height: 60,
                                   width: 60,
-                                  decoration: const BoxDecoration(
+                                  decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: Colors.orangeAccent,
+                                    color: widget.btnColor,
                                   ),
                                   child: IconButton(
                                     onPressed:
@@ -206,9 +216,9 @@ class _CbIntrosState extends State<CbIntros> {
                                                 (widget.images.length - 1)
                                             ? _onIntroNext
                                             : _onIntroEnd,
-                                    icon: const Icon(
-                                      Icons.keyboard_arrow_right_outlined,
-                                      color: Colors.white,
+                                    icon: Icon(
+                                      widget.btnIcon,
+                                      color: widget.btnIconColor,
                                     ),
                                   ),
                                 ),

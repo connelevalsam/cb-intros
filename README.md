@@ -2,6 +2,7 @@
 
 A visually appealing and customizable onboarding/intro screen widget for your Flutter applications.
 
+
 [![pub package](https://img.shields.io/pub/v/cb_intros.svg)](https://pub.dev/packages/cb_intros)
 [![GitHub stars](https://img.shields.io/github/stars/connelevalsam/cb-intros.git)](https://github.com/connelevalsam/cb-intros.git)
 
@@ -19,8 +20,10 @@ A visually appealing and customizable onboarding/intro screen widget for your Fl
 
 <!-- Add screenshots or GIFs here to showcase your package visually -->
 <!-- For example:
-<img src="https://your-github-repo/assets/screenshot1.png" width="300">
-<img src="https://your-github-repo/assets/demo.gif" width="300">
+![Alt on Android](assets/examples/Screenshot01.png)
+![Alt on Android](assets/examples/Screenshot02.png)
+![Alt on iOS](assets/examples/Screenshot03.png)
+![Alt on iOS](assets/examples/Screenshot03.png)
 -->
 
 ## Getting Started
@@ -69,8 +72,8 @@ Here's a basic example of how to use `CbIntros`:
             List<String> img = [
                 'assets/images/image1.jpg',
                 'assets/images/image2.png',
-                'assets/images/manu vs arsenal.jpeg',
-                'assets/images/Osimhen.jpeg',
+                ''https://images.pexels.com/photos/30694611/pexels-photo-30694611/free-photo-of-scenic-palm-tree-avenue-on-a-sunny-day.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+                'assets/images/image3.svg',
             ];
             List<Color> colors = [
                 Colors.blue,
@@ -91,7 +94,24 @@ Here's a basic example of how to use `CbIntros`:
                 "_counter without calling setState(), then the build method would not",
             ];
             
-            moveToNextScreen() {}
+            int _currentPageIndex = 0;
+
+            void _handlePageChanged(int newIndex) {
+              setState(() {
+                _currentPageIndex = newIndex;
+                print("Current page index: $_currentPageIndex");
+                // You can add any logic here based on the new index,
+                // like showing/hiding elements, updating other parts of the UI, etc.
+                if (_currentPageIndex == img.length) {
+                // Example: trigger something on the last page
+                  print("Reached the last page!");
+                }
+              });
+            }
+            
+            moveToNextScreen() {
+              print("The END...");
+            }
             
             @override
             Widget build(BuildContext context) {
@@ -103,11 +123,44 @@ Here's a basic example of how to use `CbIntros`:
                         desc: desc,
                         moveToNextScreen: moveToNextScreen,
                         appPadding: 20,
+                        boxHeight: 200.h,
                         boxColor: Colors.blueAccent,
-                    ), // This trailing comma makes auto-formatting nicer for build methods.
+                        titleContainer: (BuildContext context) {
+                            return Text(
+                                title[_currentPageIndex],
+                                style: Theme.of(
+                                    context,
+                                ).textTheme.displaySmall?.copyWith(color: Colors.white),
+                                textAlign: TextAlign.center,
+                            );
+                        },
+                        descContainer: (BuildContext context) {
+                            return Text(
+                                desc[_currentPageIndex],
+                                style: Theme.of(
+                                    context,
+                                ).textTheme.bodyMedium?.copyWith(color: Colors.grey.shade500),
+                                textAlign: TextAlign.center,
+                            );
+                        },
+                        onPageChanged: _handlePageChanged,
+                    ),
                 );
         }
     }
-    
+
+
+## Definition of Terms
+**images:** An array of images that you want to use as the info images.
+**colors:** An array of colors that will be used as the background colors.
+**title:** The title or main word of each screen.
+**desc:** The descriptions in each screens.
+**moveToNextScreen:** You put your Navigator logic here. This triggers after the last screen.
+**boxHeight:** The height of the box with the button curves.
+**appPadding:** The padding around the widgets used in the box.
+**boxColor:** A preferred color for the box.
+**titleContainer:** The widget used to display the title. 
+**descContainer:** The widget used to display the description. 
+**onPageChanged:** The method that makes sure to keep track of the current page and index.
     
     
