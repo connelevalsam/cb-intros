@@ -19,12 +19,11 @@ A visually appealing and customizable onboarding/intro screen widget for your Fl
 ## Screenshots/GIFs (Replace with your actual media)
 
 <!-- Add screenshots or GIFs here to showcase your package visually -->
-<!-- For example:
+
 ![Alt on Android](assets/examples/Screenshot01.png)
 ![Alt on Android](assets/examples/Screenshot02.png)
 ![Alt on iOS](assets/examples/Screenshot03.png)
 ![Alt on iOS](assets/examples/Screenshot03.png)
--->
 
 ## Getting Started
 
