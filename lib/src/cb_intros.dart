@@ -23,6 +23,7 @@ class CbIntros extends StatefulWidget {
     required this.boxColor,
     required this.titleContainer,
     required this.descContainer,
+    required this.animationEffects,
     this.onPageChanged,
     this.btnColor = Colors.orange,
     this.btnIconColor = Colors.white,
@@ -43,6 +44,7 @@ class CbIntros extends StatefulWidget {
   final List<String> titles;
   final WidgetBuilder descContainer;
   final List<String> desc;
+  final List<Effect> animationEffects;
   final double boxHeight;
   final double appPadding;
   final VoidCallback moveToNextScreen;
@@ -81,8 +83,8 @@ class _CbIntrosState extends State<CbIntros> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    phoneHeight = MediaQuery.of(context).size.height;
-    phoneWidth = MediaQuery.of(context).size.width;
+    phoneHeight = MediaQuery.sizeOf(context).height;
+    phoneWidth = MediaQuery.sizeOf(context).width;
   }
 
   void _onIntroNext() {
@@ -113,35 +115,40 @@ class _CbIntrosState extends State<CbIntros> {
             (index) => Column(
                   children: [
                     Expanded(
-                      child: Builder(
-                            builder: (BuildContext context) {
-                              if (currentIndex < widget.images.length) {
-                                // Determine image type based on some logic (e.g., file extension)
-                                final imagePath = widget.images[currentIndex];
-                                if (imagePath.endsWith('.svg')) {
-                                  return SvgPicture.asset(
-                                    imagePath,
-                                    fit: BoxFit.cover,
-                                  );
-                                } else if (imagePath.startsWith('http') ||
-                                    imagePath.startsWith('https')) {
-                                  return Image.network(
-                                    imagePath,
-                                    fit: BoxFit.cover,
-                                  );
-                                } else {
-                                  return Image.asset(
-                                    imagePath,
-                                    fit: BoxFit.cover,
-                                  );
-                                }
-                              } else {
-                                return Container(); // Or some default/error widget
-                              }
-                            },
-                          )
-                          .animate(delay: 1000.ms)
-                          .fadeIn(delay: 500.ms, duration: 1000.ms),
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: 840),
+                        child: Animate(
+                          effects: widget.animationEffects,
+                          delay: 1000.ms,
+                          child: Builder(
+                                builder: (BuildContext context) {
+                                  if (currentIndex < widget.images.length) {
+                                    // Determine image type based on some logic (e.g., file extension)
+                                    final imagePath = widget.images[currentIndex];
+                                    if (imagePath.endsWith('.svg')) {
+                                      return SvgPicture.asset(
+                                        imagePath,
+                                        fit: BoxFit.cover,
+                                      );
+                                    } else if (imagePath.startsWith('http') ||
+                                        imagePath.startsWith('https')) {
+                                      return Image.network(
+                                        imagePath,
+                                        fit: BoxFit.cover,
+                                      );
+                                    } else {
+                                      return Image.asset(
+                                        imagePath,
+                                        fit: BoxFit.cover,
+                                      );
+                                    }
+                                  } else {
+                                    return Container(); // Or some default/error widget
+                                  }
+                                },
+                              ),
+                        ),
+                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(
@@ -163,68 +170,71 @@ class _CbIntrosState extends State<CbIntros> {
                       ),
                     ),
                     Center(
-                      child: SizedBox(
-                        height: widget.boxHeight,
-                        child: Stack(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(
-                                left: 20.0,
-                                right: 20.0,
-                                bottom: 50,
-                              ),
-                              child: ClipPath(
-                                clipper: SideCutClipper(),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: widget.boxColor,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Center(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        widget.titleContainer(context),
-                                        SizedBox(height: 2),
-                                        Padding(
-                                          padding: EdgeInsets.all(20.0),
-                                          child: widget.descContainer(context),
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: 840),
+                        child: SizedBox(
+                          height: widget.boxHeight,
+                          child: Stack(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  left: 20.0,
+                                  right: 20.0,
+                                  bottom: 50,
+                                ),
+                                child: ClipPath(
+                                  clipper: SideCutClipper(),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: widget.boxColor,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Center(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          widget.titleContainer(context),
+                                          SizedBox(height: 2),
+                                          Padding(
+                                            padding: EdgeInsets.all(20.0),
+                                            child: widget.descContainer(context),
 
-                                        ),
-                                      ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            Positioned(
-                              bottom: 30,
-                              left: 0,
-                              right: 0,
-                              child: Center(
-                                child: Container(
-                                  height: 60,
-                                  width: 60,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: widget.btnColor,
-                                  ),
-                                  child: IconButton(
-                                    onPressed:
-                                        currentIndex !=
-                                                (widget.images.length - 1)
-                                            ? _onIntroNext
-                                            : _onIntroEnd,
-                                    icon: Icon(
-                                      widget.btnIcon,
-                                      color: widget.btnIconColor,
+                              Positioned(
+                                bottom: 30,
+                                left: 0,
+                                right: 0,
+                                child: Center(
+                                  child: Container(
+                                    height: 60,
+                                    width: 60,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: widget.btnColor,
+                                    ),
+                                    child: IconButton(
+                                      onPressed:
+                                          currentIndex !=
+                                                  (widget.images.length - 1)
+                                              ? _onIntroNext
+                                              : _onIntroEnd,
+                                      icon: Icon(
+                                        widget.btnIcon,
+                                        color: widget.btnIconColor,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -246,7 +256,8 @@ class SideCutClipper extends CustomClipper<Path> {
   Path getClip(Size size) {
     // The guest's shape is a circle bounded by the guest rectangle.
     // So the guest's radius is half the guest width.
-    final double r = size.width / 8;
+    final double rBase = size.width > 500 ? 14 : 8;
+    final double r = size.width / rBase;
     final Rect host = Rect.fromLTWH(0, 0, size.width, size.height);
     final notCenter = Offset(size.width / 2, size.height);
     final Rect guest = Rect.fromCircle(center: notCenter, radius: r);
