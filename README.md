@@ -92,6 +92,11 @@ Here's a basic example of how to use `CbIntros`:
                 "so that the display can reflect the updated values. If we changed",
                 "_counter without calling setState(), then the build method would not",
             ];
+
+            final List<Effect> animationEffects = [
+              FlipEffect(duration: Duration(seconds: 2)),
+              const FadeEffect(delay: Duration(seconds: 2)),
+            ];
             
             int _currentPageIndex = 0;
 
@@ -142,6 +147,7 @@ Here's a basic example of how to use `CbIntros`:
                                 textAlign: TextAlign.center,
                             );
                         },
+                        animationEffects: animationEffects,
                         onPageChanged: _handlePageChanged,
                     ),
                 );
@@ -154,6 +160,7 @@ Here's a basic example of how to use `CbIntros`:
 **colors:** An array of colors that will be used as the background colors.\
 **title:** The title or main word of each screen.\
 **desc:** The descriptions in each screens.\
+**animationEffects:** The list of different animations from flutter_animate.\
 **moveToNextScreen:** You put your Navigator logic here. This triggers after the last screen.\
 **boxHeight:** The height of the box with the button curves.\
 **appPadding:** The padding around the widgets used in the box.\
