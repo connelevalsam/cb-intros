@@ -28,145 +28,152 @@ A visually appealing and customizable onboarding/intro screen widget for your Fl
 ## Getting Started
 
 1. **Add the dependency:**
+   ```yaml
+   dependencies:
+     cb_intros: ^0.2.0
+   ```
 2. **Install the package:**
+   ```bash
+   flutter pub get
+   ```
 3. **Import it:**
+   ```dart
+   import 'package:cb_intros/cb_intros.dart';
+   ```
 
 ## Usage
 
 Here's a basic example of how to use `CbIntros`:
 
-    import 'package:cb_intros/cb_intros.dart';
-    import 'package:flutter/material.dart';
-    
-    void main() {
-    runApp(const MyApp());
-    }
-    
-    class MyApp extends StatelessWidget {
-        const MyApp({super.key});
-    
-        // This widget is the root of your application.
-        @override
-        Widget build(BuildContext context) {
-            return MaterialApp(
-                title: 'CBIntros Demo',
-                theme: ThemeData(
-                    colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+```dart
+import 'package:cb_intros/cb_intros.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'CBIntros Demo',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      ),
+      home: const MyHomePage(title: 'CBIntros Demo Home Page'),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key, required this.title});
+
+  final String title;
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  List<String> img = [
+    'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/1099680/pexels-photo-1099680.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+    'https://images.pexels.com/photos/958545/pexels-photo-958545.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+  ];
+  List<Color> colors = [
+    Colors.black,
+    Colors.orange,
+    Colors.purple,
+    Colors.red,
+  ];
+  List<String> title = [
+    "Healthy Food",
+    "Fast Delivery",
+    "Easy Payment",
+    "Enjoy",
+  ];
+  List<String> desc = [
+    "Order healthy and fresh food online from the comfort of your home.",
+    "We deliver your order to your doorstep in a very short time.",
+    "Pay for your order using any of our easy payment methods.",
+    "Enjoy your meal with your family and friends.",
+  ];
+
+  final List<Effect> animationEffects = [
+    FlipEffect(duration: Duration(seconds: 1)),
+    const FadeEffect(delay: Duration(seconds: 1)),
+  ];
+
+  void moveToNextScreen() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Onboarding Finished!')),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: CbIntros(
+        images: img,
+        colors: colors,
+        titles: title,
+        desc: desc,
+        moveToNextScreen: moveToNextScreen,
+        appPadding: 20,
+        boxHeight: 300,
+        boxColor: Colors.white,
+        btnColor: Colors.deepPurple,
+        indicatorActiveColor: Colors.deepPurple,
+        titleContainer: (BuildContext context, String content) {
+          return Text(
+            content,
+            style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
                 ),
-                home: const MyHomePage(title: 'CBIntros Demo Home Page'),
-            );
-        }
-    }
-    
-    class MyHomePage extends StatefulWidget {
-        const MyHomePage({super.key, required this.title});
-    
-        final String title;
-    
-        @override
-            State<MyHomePage> createState() => _MyHomePageState();
-        }
-    
-        class _MyHomePageState extends State<MyHomePage> {
-            List<String> img = [
-                'assets/images/image1.jpg',
-                'assets/images/image2.png',
-                ''https://images.pexels.com/photos/30694611/pexels-photo-30694611/free-photo-of-scenic-palm-tree-avenue-on-a-sunny-day.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-                'assets/images/image3.svg',
-            ];
-            List<Color> colors = [
-                Colors.blue,
-                Colors.orange,
-                Colors.purple,
-                Colors.red
-            ];
-            List<String> title = [
-                "Balance",
-                "Real",
-                "Maintain",
-                "Diverse",
-            ];
-            List<String> desc = [
-                "This call to setState tells the Flutter framework that something has",
-                "changed in this State, which causes it to rerun the build method below",
-                "so that the display can reflect the updated values. If we changed",
-                "_counter without calling setState(), then the build method would not",
-            ];
-
-            final List<Effect> animationEffects = [
-              FlipEffect(duration: Duration(seconds: 2)),
-              const FadeEffect(delay: Duration(seconds: 2)),
-            ];
-            
-            int _currentPageIndex = 0;
-
-            void _handlePageChanged(int newIndex) {
-              setState(() {
-                _currentPageIndex = newIndex;
-                print("Current page index: $_currentPageIndex");
-                // You can add any logic here based on the new index,
-                // like showing/hiding elements, updating other parts of the UI, etc.
-                if (_currentPageIndex == img.length) {
-                // Example: trigger something on the last page
-                  print("Reached the last page!");
-                }
-              });
-            }
-            
-            moveToNextScreen() {
-              print("The END...");
-            }
-            
-            @override
-            Widget build(BuildContext context) {
-                return Scaffold(
-                    body: CbIntros(
-                        images: img,
-                        colors: colors,
-                        titles: title,
-                        desc: desc,
-                        moveToNextScreen: moveToNextScreen,
-                        appPadding: 20,
-                        boxHeight: 200.h,
-                        boxColor: Colors.blueAccent,
-                        titleContainer: (BuildContext context) {
-                            return Text(
-                                title[_currentPageIndex],
-                                style: Theme.of(
-                                    context,
-                                ).textTheme.displaySmall?.copyWith(color: Colors.white),
-                                textAlign: TextAlign.center,
-                            );
-                        },
-                        descContainer: (BuildContext context) {
-                            return Text(
-                                desc[_currentPageIndex],
-                                style: Theme.of(
-                                    context,
-                                ).textTheme.bodyMedium?.copyWith(color: Colors.grey.shade500),
-                                textAlign: TextAlign.center,
-                            );
-                        },
-                        animationEffects: animationEffects,
-                        onPageChanged: _handlePageChanged,
-                    ),
-                );
-        }
-    }
-
+            textAlign: TextAlign.center,
+          );
+        },
+        descContainer: (BuildContext context, String content) {
+          return Text(
+            content,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Colors.grey.shade600,
+                ),
+            textAlign: TextAlign.center,
+          );
+        },
+        animationEffects: animationEffects,
+        onPageChanged: (index) {
+          // Track page changes
+          debugPrint('Page changed to: $index');
+        },
+      ),
+    );
+  }
+}
+```
 
 ## Definition of Terms
-**images:** An array of images that you want to use as the info images.\
-**colors:** An array of colors that will be used as the background colors.\
-**title:** The title or main word of each screen.\
-**desc:** The descriptions in each screens.\
-**animationEffects:** The list of different animations from flutter_animate.\
-**moveToNextScreen:** You put your Navigator logic here. This triggers after the last screen.\
-**boxHeight:** The height of the box with the button curves.\
-**appPadding:** The padding around the widgets used in the box.\
-**boxColor:** A preferred color for the box.\
-**titleContainer:** The widget used to display the title.\
-**descContainer:** The widget used to display the description.\
-**onPageChanged:** The method that makes sure to keep track of the current page and index.\
-    
-    
+
+*   **images:** An array of images/paths that you want to use as the info images.
+*   **colors:** An array of colors that will be used as the background colors for each page.
+*   **titles:** The title or main word of each screen (List\<String>).
+*   **desc:** The descriptions in each screens (List\<String>).
+*   **animationEffects:** The list of different animations from `flutter_animate` to apply to the image.
+*   **moveToNextScreen:** Callback to execute after the last screen (e.g., navigation).
+*   **boxHeight:** The height of the bottom box with the button curves.
+*   **appPadding:** The vertical padding around the indicator.
+*   **boxColor:** A preferred color for the bottom box.
+*   **titleContainer:** A builder function `(context, content)` to style and display the title.
+*   **descContainer:** A builder function `(context, content)` to style and display the description.
+*   **onPageChanged:** Callback when the page changes, providing the current index.
+*   **btnColor:** Color of the next/finish button circle.
+*   **btnIconColor:** Color of the icon inside the button.
+*   **btnIcon:** IconData for the button.

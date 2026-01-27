@@ -10,10 +10,13 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+typedef CbIntrosContentBuilder =
+    Widget Function(BuildContext context, String content);
+
 class CbIntros extends StatefulWidget {
   const CbIntros({
     super.key,
-    required this.images,
+    required this.items,
     required this.colors,
     required this.titles,
     required this.desc,
@@ -30,9 +33,20 @@ class CbIntros extends StatefulWidget {
     this.btnIcon = Icons.arrow_forward_ios,
     this.indicatorColor = Colors.grey,
     this.indicatorActiveColor = Colors.white,
-  });
+  }) : assert(
+         titles.length == items.length,
+         'Titles and items must have the same length',
+       ),
+       assert(
+         desc.length == items.length,
+         'Descriptions and items must have the same length',
+       ),
+       assert(
+         colors.length == items.length,
+         'Colors and items must have the same length',
+       );
 
-  final List<String> images;
+  final List<Widget> items;
   final List<Color> colors;
   final Color boxColor;
   final Color btnColor;
@@ -40,9 +54,9 @@ class CbIntros extends StatefulWidget {
   final Color indicatorColor;
   final Color indicatorActiveColor;
   final IconData btnIcon;
-  final WidgetBuilder titleContainer;
+  final CbIntrosContentBuilder titleContainer;
   final List<String> titles;
-  final WidgetBuilder descContainer;
+  final CbIntrosContentBuilder descContainer;
   final List<String> desc;
   final List<Effect> animationEffects;
   final double boxHeight;
@@ -111,42 +125,16 @@ class _CbIntrosState extends State<CbIntros> {
         child: PageView(
           controller: _controller,
           children: List.generate(
-            widget.colors.length,
+            widget.items.length,
             (index) => Column(
                   children: [
                     Expanded(
                       child: ConstrainedBox(
-                        constraints: BoxConstraints(maxWidth: 840),
+                        constraints: const BoxConstraints(maxWidth: 840),
                         child: Animate(
                           effects: widget.animationEffects,
-                          delay: 1000.ms,
-                          child: Builder(
-                                builder: (BuildContext context) {
-                                  if (currentIndex < widget.images.length) {
-                                    // Determine image type based on some logic (e.g., file extension)
-                                    final imagePath = widget.images[currentIndex];
-                                    if (imagePath.endsWith('.svg')) {
-                                      return SvgPicture.asset(
-                                        imagePath,
-                                        fit: BoxFit.cover,
-                                      );
-                                    } else if (imagePath.startsWith('http') ||
-                                        imagePath.startsWith('https')) {
-                                      return Image.network(
-                                        imagePath,
-                                        fit: BoxFit.cover,
-                                      );
-                                    } else {
-                                      return Image.asset(
-                                        imagePath,
-                                        fit: BoxFit.cover,
-                                      );
-                                    }
-                                  } else {
-                                    return Container(); // Or some default/error widget
-                                  }
-                                },
-                              ),
+                          delay: 100.ms,
+                          child: widget.items[index],
                         ),
                       ),
                     ),
@@ -156,7 +144,7 @@ class _CbIntrosState extends State<CbIntros> {
                       ),
                       child: AnimatedSmoothIndicator(
                         activeIndex: currentIndex,
-                        count: widget.images.length,
+                        count: widget.items.length,
                         effect: ExpandingDotsEffect(
                           spacing: 8.0,
                           radius: 4.0,
@@ -165,19 +153,25 @@ class _CbIntrosState extends State<CbIntros> {
                           dotColor: widget.indicatorColor,
                           paintStyle: PaintingStyle.fill,
                           activeDotColor: widget.indicatorActiveColor,
-                        ), // your preferred effect
-                        onDotClicked: (index) {},
+                        ),
+                        onDotClicked: (index) {
+                          _controller.animateToPage(
+                            index,
+                            duration: const Duration(milliseconds: 500),
+                            curve: Curves.easeInOut,
+                          );
+                        },
                       ),
                     ),
                     Center(
                       child: ConstrainedBox(
-                        constraints: BoxConstraints(maxWidth: 840),
+                        constraints: const BoxConstraints(maxWidth: 840),
                         child: SizedBox(
                           height: widget.boxHeight,
                           child: Stack(
                             children: [
                               Padding(
-                                padding: EdgeInsets.only(
+                                padding: const EdgeInsets.only(
                                   left: 20.0,
                                   right: 20.0,
                                   bottom: 50,
@@ -194,12 +188,17 @@ class _CbIntrosState extends State<CbIntros> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          widget.titleContainer(context),
-                                          SizedBox(height: 2),
+                                          widget.titleContainer(
+                                            context,
+                                            widget.titles[index],
+                                          ),
+                                          const SizedBox(height: 2),
                                           Padding(
-                                            padding: EdgeInsets.all(20.0),
-                                            child: widget.descContainer(context),
-
+                                            padding: const EdgeInsets.all(20.0),
+                                            child: widget.descContainer(
+                                              context,
+                                              widget.desc[index],
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -222,7 +221,7 @@ class _CbIntrosState extends State<CbIntros> {
                                     child: IconButton(
                                       onPressed:
                                           currentIndex !=
-                                                  (widget.images.length - 1)
+                                                  (widget.items.length - 1)
                                               ? _onIntroNext
                                               : _onIntroEnd,
                                       icon: Icon(
@@ -238,7 +237,7 @@ class _CbIntrosState extends State<CbIntros> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 45),
+                    const SizedBox(height: 45),
                   ],
                 )
                 .animate()

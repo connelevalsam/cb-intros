@@ -1,7 +1,8 @@
 name: cb_intros
-description: "A better way to introduce users to your app. A circular bottom curve and circular button with nice transitions."
-version: 0.2.0
+description: "A customizable and animated onboarding screen package for Flutter, allowing developers to quickly create beautiful introduction flows."
+version: 0.2.1
 homepage: https://github.com/connelevalsam/cb-intros
+repository: https://github.com/connelevalsam/cb-intros
 
 environment:
   sdk: ^3.7.0

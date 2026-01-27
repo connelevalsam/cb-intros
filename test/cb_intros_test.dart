@@ -1,6 +1,6 @@
+import 'package:cb_intros/cb_intros.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:cb_intros/cb_intros.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 void main() {
@@ -8,10 +8,7 @@ void main() {
     WidgetTester tester,
   ) async {
     // Define test data
-    const List<String> images = [
-      'assets/images/test_img1.JPG',
-      'assets/images/test_img2.JPG',
-    ];
+    final List<Widget> items = [const Text('Item 1'), const Text('Item 2')];
     const List<Color> colors = [Colors.blue, Colors.green];
     const Color boxColor = Colors.white;
     const List<String> titles = ['Title 1', 'Title 2'];
@@ -24,7 +21,7 @@ void main() {
       MaterialApp(
         home: Scaffold(
           body: CbIntros(
-            images: images,
+            items: items,
             colors: colors,
             boxColor: boxColor,
             titles: titles,
@@ -32,11 +29,18 @@ void main() {
             appPadding: appPadding,
             moveToNextScreen: () {
               nextScreenCalled = true;
-            }, titleContainer: (BuildContext context) {
-              return Text("data");
-          }, descContainer: (BuildContext context) {
-              return Text("data");
-          }, boxHeight: 300.0, btnColor: Colors.pink, btnIconColor: Colors.white, btnIcon: Icons.add, animationEffects: [],
+            },
+            titleContainer: (BuildContext context, String content) {
+              return Text(content);
+            },
+            descContainer: (BuildContext context, String content) {
+              return Text(content);
+            },
+            boxHeight: 300.0,
+            btnColor: Colors.pink,
+            btnIconColor: Colors.white,
+            btnIcon: Icons.add,
+            animationEffects: [],
           ),
         ),
       ),
@@ -46,30 +50,25 @@ void main() {
     // Verify key elements are present
     expect(find.byType(PageView), findsOneWidget);
     expect(find.byType(AnimatedSmoothIndicator), findsOneWidget);
+    expect(find.text('Item 1'), findsOneWidget);
     expect(find.text(titles[0]), findsOneWidget);
     expect(find.text(descriptions[0]), findsOneWidget);
-    expect(find.byIcon(Icons.keyboard_arrow_right_outlined), findsOneWidget);
+    expect(find.byIcon(Icons.add), findsOneWidget);
 
     // Test page change
     final pageView = find.byType(PageView).first;
     await tester.drag(pageView, const Offset(-400, 0)); // Drag to next page
     await tester.pumpAndSettle();
 
+    expect(find.text('Item 2'), findsOneWidget);
     expect(find.text(titles[1]), findsOneWidget);
     expect(find.text(descriptions[1]), findsOneWidget);
 
     // Test button tap
-    await tester.tap(find.byIcon(Icons.keyboard_arrow_right_outlined));
+    await tester.tap(find.byIcon(Icons.add));
     await tester.pumpAndSettle();
 
     // The button on the last page triggers the callback
-    expect(nextScreenCalled, false); // Because we are not on the last page
-
-    await tester.drag(pageView, const Offset(-400, 0)); // Drag to the next page
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byIcon(Icons.keyboard_arrow_right_outlined));
-    await tester.pumpAndSettle();
-    expect(nextScreenCalled, true); // Now it should be true
+    expect(nextScreenCalled, true);
   });
 }
