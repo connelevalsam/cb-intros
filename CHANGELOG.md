@@ -1,4 +1,9 @@
-## 0.2.1
+## 0.2.2
+
+- Updated `CbIntros` to accept a `List<Widget>` for the `items` parameter instead of a `List<String>`. This allows for greater flexibility, enabling the use of `Icon` widgets or any other custom widget in the onboarding screens, not just images.
+- Renamed `images` parameter to `items` to better reflect the change.
+
+## 0.2.0
 
 Initial release of cb_intros.
 Implements a customizable onboarding/intro screen widget with:

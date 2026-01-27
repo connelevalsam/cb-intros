@@ -8,8 +8,9 @@ A visually appealing and customizable onboarding/intro screen widget for your Fl
 
 ## Features
 
+* **Flexible Content:** Display any widget on each page, not just images.
 * **Smooth Page Transition:**  Provides a smooth `PageView` for a seamless onboarding experience.
-* **Customizable Appearance:** Control the background colors, image assets, text content (titles and
+* **Customizable Appearance:** Control the background colors, text content (titles and
   descriptions), button color, and padding.
 * **Animated Page Indicator:** Includes a visually appealing smooth page indicator to show progress.
 * **Unique Design:** Features a distinctive "side-cut" design for the text and button area.
@@ -30,7 +31,7 @@ A visually appealing and customizable onboarding/intro screen widget for your Fl
 1. **Add the dependency:**
    ```yaml
    dependencies:
-     cb_intros: ^0.2.0
+     cb_intros: ^0.2.2
    ```
 2. **Install the package:**
    ```bash
@@ -80,25 +81,41 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<String> img = [
-    'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-    'https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-    'https://images.pexels.com/photos/1099680/pexels-photo-1099680.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-    'https://images.pexels.com/photos/958545/pexels-photo-958545.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+  final List<Widget> items = [
+    Image.network(
+      'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      fit: BoxFit.cover,
+      width: double.infinity,
+    ),
+    Image.network(
+      'https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      fit: BoxFit.cover,
+      width: double.infinity,
+    ),
+    const Icon(
+      Icons.payment,
+      size: 200,
+      color: Colors.white,
+    ),
+    Image.network(
+      'https://images.pexels.com/photos/958545/pexels-photo-958545.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+      fit: BoxFit.cover,
+      width: double.infinity,
+    ),
   ];
-  List<Color> colors = [
+  final List<Color> colors = [
     Colors.black,
     Colors.orange,
     Colors.purple,
     Colors.red,
   ];
-  List<String> title = [
+  final List<String> title = [
     "Healthy Food",
     "Fast Delivery",
     "Easy Payment",
     "Enjoy",
   ];
-  List<String> desc = [
+  final List<String> desc = [
     "Order healthy and fresh food online from the comfort of your home.",
     "We deliver your order to your doorstep in a very short time.",
     "Pay for your order using any of our easy payment methods.",
@@ -106,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
 
   final List<Effect> animationEffects = [
-    FlipEffect(duration: Duration(seconds: 1)),
+    const FlipEffect(duration: Duration(seconds: 1)),
     const FadeEffect(delay: Duration(seconds: 1)),
   ];
 
@@ -120,7 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: CbIntros(
-        images: img,
+        items: items,
         colors: colors,
         titles: title,
         desc: desc,
@@ -162,11 +179,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
 ## Definition of Terms
 
-*   **images:** An array of images/paths that you want to use as the info images.
+*   **items:** A list of widgets to display on each page. This allows you to use `Image`, `Icon`, or any other widget.
 *   **colors:** An array of colors that will be used as the background colors for each page.
-*   **titles:** The title or main word of each screen (List\<String>).
-*   **desc:** The descriptions in each screens (List\<String>).
-*   **animationEffects:** The list of different animations from `flutter_animate` to apply to the image.
+*   **titles:** The title or main word of each screen (List<String>).
+*   **desc:** The descriptions in each screens (List<String>).
+*   **animationEffects:** The list of different animations from `flutter_animate` to apply to the item.
 *   **moveToNextScreen:** Callback to execute after the last screen (e.g., navigation).
 *   **boxHeight:** The height of the bottom box with the button curves.
 *   **appPadding:** The vertical padding around the indicator.
