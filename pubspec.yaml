@@ -12,8 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   smooth_page_indicator: ^1.2.0+3
-  flutter_animate: ^4.2.0+1
-  flutter_svg: ^2.0.17
+  flutter_animate: ^4.5.0
 
 dev_dependencies:
   flutter_test:
