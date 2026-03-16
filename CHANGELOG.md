@@ -1,3 +1,7 @@
+## 0.2.3
+
+- Updated `CbIntros` to accept a `List<List<Effect>>` for the `animationEffects` parameter. This now makes it possible to get the animation accurately. Now the package handles the case of having less animations than the number of screens.
+
 ## 0.2.2
 
 - Updated `CbIntros` to accept a `List<Widget>` for the `items` parameter instead of a `List<String>`. This allows for greater flexibility, enabling the use of `Icon` widgets or any other custom widget in the onboarding screens, not just images.

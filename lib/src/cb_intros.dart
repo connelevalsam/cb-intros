@@ -41,6 +41,11 @@ class CbIntros extends StatefulWidget {
          'Descriptions and items must have the same length',
        ),
        assert(
+         animationEffects.length <= items.length ||
+             animationEffects.length <= 0,
+         'animationEffects cannot have more entries than items',
+       ),
+       assert(
          colors.length == items.length,
          'Colors and items must have the same length',
        );
@@ -57,7 +62,7 @@ class CbIntros extends StatefulWidget {
   final List<String> titles;
   final CbIntrosContentBuilder descContainer;
   final List<String> desc;
-  final List<Effect> animationEffects;
+  final List<List<Effect>> animationEffects;
   final double boxHeight;
   final double appPadding;
   final VoidCallback moveToNextScreen;
@@ -70,34 +75,28 @@ class CbIntros extends StatefulWidget {
 class _CbIntrosState extends State<CbIntros> {
   final _controller = PageController();
   int currentIndex = 0;
-  double phoneHeight = 0.0;
-  double phoneWidth = 0.0;
 
   @override
   void initState() {
-    super.initState();
     _controller.addListener(_pageListener);
+    super.initState();
   }
 
   void _pageListener() {
-    setState(() {
-      currentIndex = _controller.page!.round();
+    final page = _controller.page;
+    if (page == null) return;
+    final newIndex = page.round();
+    if (newIndex != currentIndex) {
+      setState(() => currentIndex = newIndex);
       widget.onPageChanged?.call(currentIndex);
-    });
+    }
   }
 
   @override
   void dispose() {
-    super.dispose();
     _controller.removeListener(_pageListener);
     _controller.dispose();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    phoneHeight = MediaQuery.sizeOf(context).height;
-    phoneWidth = MediaQuery.sizeOf(context).width;
+    super.dispose();
   }
 
   void _onIntroNext() {
@@ -105,9 +104,6 @@ class _CbIntrosState extends State<CbIntros> {
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeInOut,
     );
-    setState(() {
-      currentIndex = _controller.page!.round();
-    });
   }
 
   void _onIntroEnd() {
@@ -116,6 +112,8 @@ class _CbIntrosState extends State<CbIntros> {
 
   @override
   Widget build(BuildContext context) {
+    final phoneHeight = MediaQuery.sizeOf(context).height;
+    final phoneWidth = MediaQuery.sizeOf(context).width;
     return Scaffold(
       body: Container(
         width: phoneWidth,
@@ -123,126 +121,125 @@ class _CbIntrosState extends State<CbIntros> {
         color: widget.colors[currentIndex],
         child: PageView(
           controller: _controller,
-          children: List.generate(
-            widget.items.length,
-            (index) => Column(
-                  children: [
-                    Expanded(
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 840),
-                        child: Animate(
-                          effects: widget.animationEffects,
-                          delay: 100.ms,
-                          child: widget.items[index],
-                        ),
-                      ),
+          children: List.generate(widget.items.length, (index) {
+            final effects =
+                widget.animationEffects.isEmpty
+                    ? <Effect>[]
+                    : index < widget.animationEffects.length
+                    ? widget.animationEffects[index]
+                    : widget.animationEffects.last;
+            return Column(
+              children: [
+                Expanded(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 840),
+                    child: Animate(
+                      key: ValueKey('animate_$index'),
+                      effects: effects,
+                      delay: 100.ms,
+                      child: widget.items[index],
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: widget.appPadding,
-                      ),
-                      child: AnimatedSmoothIndicator(
-                        activeIndex: currentIndex,
-                        count: widget.items.length,
-                        effect: ExpandingDotsEffect(
-                          spacing: 8.0,
-                          radius: 4.0,
-                          dotWidth: 10.0,
-                          dotHeight: 8.0,
-                          dotColor: widget.indicatorColor,
-                          paintStyle: PaintingStyle.fill,
-                          activeDotColor: widget.indicatorActiveColor,
-                        ),
-                        onDotClicked: (index) {
-                          _controller.animateToPage(
-                            index,
-                            duration: const Duration(milliseconds: 500),
-                            curve: Curves.easeInOut,
-                          );
-                        },
-                      ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: widget.appPadding),
+                  child: AnimatedSmoothIndicator(
+                    activeIndex: currentIndex,
+                    count: widget.items.length,
+                    effect: ExpandingDotsEffect(
+                      spacing: 8.0,
+                      radius: 4.0,
+                      dotWidth: 10.0,
+                      dotHeight: 8.0,
+                      dotColor: widget.indicatorColor,
+                      paintStyle: PaintingStyle.fill,
+                      activeDotColor: widget.indicatorActiveColor,
                     ),
-                    Center(
-                      child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 840),
-                        child: SizedBox(
-                          height: widget.boxHeight,
-                          child: Stack(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 20.0,
-                                  right: 20.0,
-                                  bottom: 50,
+                    onDotClicked: (index) {
+                      _controller.animateToPage(
+                        index,
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.easeInOut,
+                      );
+                    },
+                  ),
+                ),
+                Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 840),
+                    child: SizedBox(
+                      height: widget.boxHeight,
+                      child: Stack(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 20.0,
+                              right: 20.0,
+                              bottom: 50,
+                            ),
+                            child: ClipPath(
+                              clipper: SideCutClipper(),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: widget.boxColor,
+                                  borderRadius: BorderRadius.circular(20),
                                 ),
-                                child: ClipPath(
-                                  clipper: SideCutClipper(),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: widget.boxColor,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Center(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          widget.titleContainer(
-                                            context,
-                                            widget.titles[index],
-                                          ),
-                                          const SizedBox(height: 2),
-                                          Padding(
-                                            padding: const EdgeInsets.all(20.0),
-                                            child: widget.descContainer(
-                                              context,
-                                              widget.desc[index],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 30,
-                                left: 0,
-                                right: 0,
                                 child: Center(
-                                  child: Container(
-                                    height: 60,
-                                    width: 60,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: widget.btnColor,
-                                    ),
-                                    child: IconButton(
-                                      onPressed:
-                                          currentIndex !=
-                                                  (widget.items.length - 1)
-                                              ? _onIntroNext
-                                              : _onIntroEnd,
-                                      icon: Icon(
-                                        widget.btnIcon,
-                                        color: widget.btnIconColor,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      widget.titleContainer(
+                                        context,
+                                        widget.titles[index],
                                       ),
-                                    ),
+                                      const SizedBox(height: 2),
+                                      Padding(
+                                        padding: const EdgeInsets.all(20.0),
+                                        child: widget.descContainer(
+                                          context,
+                                          widget.desc[index],
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
-                            ],
+                            ),
                           ),
-                        ),
+                          Positioned(
+                            bottom: 30,
+                            left: 0,
+                            right: 0,
+                            child: Center(
+                              child: Container(
+                                height: 60,
+                                width: 60,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: widget.btnColor,
+                                ),
+                                child: IconButton(
+                                  onPressed:
+                                      currentIndex != (widget.items.length - 1)
+                                          ? _onIntroNext
+                                          : _onIntroEnd,
+                                  icon: Icon(
+                                    widget.btnIcon,
+                                    color: widget.btnIconColor,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 45),
-                  ],
-                )
-                .animate()
-                .fadeIn(duration: 1000.ms)
-                .slideX(begin: 1, end: 0, duration: 1000.ms),
-          ),
+                  ),
+                ),
+                const SizedBox(height: 45),
+              ],
+            );
+          }),
         ),
       ),
     );

@@ -31,7 +31,7 @@ A visually appealing and customizable onboarding/intro screen widget for your Fl
 1. **Add the dependency:**
    ```yaml
    dependencies:
-     cb_intros: ^0.2.2
+     cb_intros: ^0.2.3
    ```
 2. **Install the package:**
    ```bash

@@ -19,29 +19,27 @@ void main() {
     // Build the widget
     await tester.pumpWidget(
       MaterialApp(
-        home: Scaffold(
-          body: CbIntros(
-            items: items,
-            colors: colors,
-            boxColor: boxColor,
-            titles: titles,
-            desc: descriptions,
-            appPadding: appPadding,
-            moveToNextScreen: () {
-              nextScreenCalled = true;
-            },
-            titleContainer: (BuildContext context, String content) {
-              return Text(content);
-            },
-            descContainer: (BuildContext context, String content) {
-              return Text(content);
-            },
-            boxHeight: 300.0,
-            btnColor: Colors.pink,
-            btnIconColor: Colors.white,
-            btnIcon: Icons.add,
-            animationEffects: [],
-          ),
+        home: CbIntros(
+          items: items,
+          colors: colors,
+          boxColor: boxColor,
+          titles: titles,
+          desc: descriptions,
+          appPadding: appPadding,
+          moveToNextScreen: () {
+            nextScreenCalled = true;
+          },
+          titleContainer: (BuildContext context, String content) {
+            return Text(content);
+          },
+          descContainer: (BuildContext context, String content) {
+            return Text(content);
+          },
+          boxHeight: 300.0,
+          btnColor: Colors.pink,
+          btnIconColor: Colors.white,
+          btnIcon: Icons.add,
+          animationEffects: [],
         ),
       ),
     );
